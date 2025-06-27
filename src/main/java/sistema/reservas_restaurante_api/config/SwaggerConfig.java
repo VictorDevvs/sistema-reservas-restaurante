@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Configuration;
                 )
         ),
         servers = {
-                @Server(url = "https://sistema-reservas-restaurante-api.onrender.com/swagger-ui/index.html",
+                @Server(url = "https://sistema-reservas-restaurante-api.onrender.com",
                         description = "Servidor de Produção")
         },
         security = {
