@@ -14,9 +14,9 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("*") // URL DA RENDER QUANDO A API ESTIVER EM PRODUÇÃO
-                        .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-                        .allowedHeaders("*"/* "Authorization", "Content-Type"*/)
+                        .allowedOrigins("https://sistema-reservas-restaurante-api.onrender.com/swagger-ui/index.html")
+                        .allowedMethods("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                        .allowedHeaders("Authorization", "Content-Type", "Accept")
                         .allowCredentials(false);
             }
         };

@@ -26,8 +26,8 @@ import org.springframework.context.annotation.Configuration;
                 )
         ),
         servers = {
-                @Server(url = "http://localhost:8080", description = "Servidor de Desenvolvimento Local")
-                // TODO adicionar outro servidor quando a API estiver em produção
+                @Server(url = "https://sistema-reservas-restaurante-api.onrender.com/swagger-ui/index.html",
+                        description = "Servidor de Produção")
         },
         security = {
                 @SecurityRequirement(name = "bearerAuth")
