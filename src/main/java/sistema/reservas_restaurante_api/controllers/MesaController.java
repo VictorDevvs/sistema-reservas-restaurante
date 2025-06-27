@@ -54,7 +54,7 @@ public class MesaController {
                             schema = @Schema(example = "{\"title\": \"Mesa já existe\", \"message\": \"Mesa de número X já existe no banco de dados\", \"timestamp\": \"2025-06-20T10:00:00\"}"))),
             @ApiResponse(responseCode = "401", description = "Não autenticado"),
             @ApiResponse(responseCode = "403", description = "Acesso negado (apenas ADMINISTRADOR)"),
-            @ApiResponse(responseCode = "409", description = "Conflito: Mesa com o mesmo número já existe") // Exemplo de um erro de negócio específico
+            @ApiResponse(responseCode = "409", description = "Conflito: Mesa com o mesmo número já existe")
     })
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRADOR')")

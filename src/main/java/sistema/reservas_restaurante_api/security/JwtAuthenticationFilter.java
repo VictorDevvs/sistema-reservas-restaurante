@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = header.substring(7);
 
             try {
-                if (jwtTokenProvider.validateToken(token)) { // Mantenha esta validação
+                if (jwtTokenProvider.validateToken(token)) {
                     String email = jwtTokenProvider.getEmailFromToken(token);
 
                     if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
