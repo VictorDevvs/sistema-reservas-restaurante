@@ -26,7 +26,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
-        logger.debug("----------- JWT Filter foi chamado para a URL: " + request.getRequestURI() + " -----------");
         String header = request.getHeader("Authorization");
 
         if (header != null && header.startsWith("Bearer ")) {
@@ -49,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     }
                 }
             } catch (Exception e) {
-                logger.error("Token JWT inválido ou expirado: " + e.getMessage());
+                e.getMessage();
             }
         }
         filterChain.doFilter(request, response);
