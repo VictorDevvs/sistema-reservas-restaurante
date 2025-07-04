@@ -63,6 +63,7 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token){
         try {
+            // Tenta analisar o token e verificar a assinatura
             Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {

@@ -56,6 +56,7 @@ public class ReservaService {
         }
 
         validarHorarioFuncionamento(request.dataHoraReserva());
+        RestauranteConstants.ultimaReserva(request.dataHoraReserva());
 
         if (!isMesaDisponivel(mesaModel, request.dataHoraReserva())) {
             throw new MesaNaoDisponivelException("Mesa não disponível para esta data e hora");
