@@ -44,8 +44,8 @@ public class ReservaController {
     })
     @GetMapping
     @PreAuthorize("hasAnyRole('CLIENTE', 'ADMINISTRADOR')")
-    public ResponseEntity<List<ReservaDTOResponse>> reservas(@AuthenticationPrincipal UserDetails details){
-        return new ResponseEntity<>(service.findAllByUsuario(details.getUsername()), HttpStatus.OK);
+    public ResponseEntity<List<ReservaDTOResponse>> reservas(){
+        return new ResponseEntity<>(service.findAllByUsuario(), HttpStatus.OK);
     }
     @PostMapping
     @PreAuthorize("hasAnyRole('CLIENTE', 'ADMINISTRADOR')")
@@ -73,9 +73,8 @@ public class ReservaController {
             @ApiResponse(responseCode = "403", description = "Acesso negado"),
             @ApiResponse(responseCode = "404", description = "Usuário ou mesa não encontrada")
     })
-    public ResponseEntity<ReservaDTOResponse> criarReserva(@RequestBody @Valid ReservaDTORequest request,
-                                                           @AuthenticationPrincipal UserDetails userDetails) {
-        return new ResponseEntity<>(service.criarReserva(request, userDetails.getUsername()), HttpStatus.CREATED);
+    public ResponseEntity<ReservaDTOResponse> criarReserva(@RequestBody @Valid ReservaDTORequest request) {
+        return new ResponseEntity<>(service.criarReserva(request), HttpStatus.CREATED);
     }
 
 

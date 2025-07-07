@@ -9,9 +9,9 @@ import java.util.regex.Pattern;
 public class ValidarSenha {
 
     public void validatePassword(String password) throws SenhaFracaException {
-        Pattern numberPattern = Pattern.compile(".*\\d.*");
+        Pattern numberPattern = Pattern.compile("\\d");
         Matcher numberMatcher = numberPattern.matcher(password);
-        boolean hasNumber = numberMatcher.matches();
+        boolean hasNumber = numberMatcher.find();
 
         Pattern specialCharPattern = Pattern.compile(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*");
         Matcher specialCharMatcher = specialCharPattern.matcher(password);

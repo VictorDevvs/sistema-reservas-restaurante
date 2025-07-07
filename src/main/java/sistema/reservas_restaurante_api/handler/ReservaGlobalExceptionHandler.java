@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import sistema.reservas_restaurante_api.exceptions.ApiDetails;
-import sistema.reservas_restaurante_api.exceptions.PermissaoNegadaException;
 import sistema.reservas_restaurante_api.exceptions.mesaexceptions.MesaNaoEncontradaException;
 import sistema.reservas_restaurante_api.exceptions.reservaexceptions.*;
 
@@ -49,18 +48,25 @@ public class ReservaGlobalExceptionHandler {
         return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(PermissaoNegadaException.class)
-    public ResponseEntity<ApiDetails> permissaoNegadaException(PermissaoNegadaException ex){
-        ApiDetails details = new ApiDetails("Permissão negada", ex.getMessage(), LocalDateTime.now());
-
-        return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(ReservaNaoAtivaException.class)
     public ResponseEntity<ApiDetails> reservaNaoAtivaException(ReservaNaoAtivaException ex){
         ApiDetails details = new ApiDetails("Reserva inativa", ex.getMessage(), LocalDateTime.now());
 
         return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ReservaNaoEncontradaException.class)
+    public ResponseEntity<ApiDetails> reservaNaoEncontradaException(ReservaNaoEncontradaException ex){
+        ApiDetails details = new ApiDetails("Reserva inexistente", ex.getMessage(), LocalDateTime.now());
+
+        return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PermissaoNegadaException.class)
+    public ResponseEntity<ApiDetails> permissaoNegadaException(PermissaoNegadaException ex){
+        ApiDetails details = new ApiDetails("Permissão negada", ex.getMessage(), LocalDateTime.now());
+
+        return new ResponseEntity<>(details, HttpStatus.FORBIDDEN);
     }
 }
 
