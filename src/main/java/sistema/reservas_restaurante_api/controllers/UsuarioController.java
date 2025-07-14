@@ -40,6 +40,19 @@ public class UsuarioController {
                             schema = @Schema(example = "{\"title\": \"Email já existe\", \"message\": \"O email inserido já existe.\", \"timestamp\": \"2025-06-20T10:00:00\"}")))
     })
     @PostMapping("/registrar")
+    /*APENAS USUARIOS ADMINISTRADORES PODERIAM CRIAR NOVOS USUÁRIOS ADMINISTRADORES, MAS, PARA ESSA SIMPLES API E PARA
+     QUE TODOS POSSAM TESTAR TODAS AS ROTAS, INCLUSIVE AQUELAS QUE SOMENTE ADMINISTRADORES PODEM ACESSAR, DEIXEI LIVRE
+     PARA CRIAR USUÁRIOS ADMINISTRADORES MESMO NÃO SENDO ADMINISTRADOR. MAS, EM UM SISTEMA REAL, É RECOMENDADO O QUE FOI
+     DITO NA PRIMEIRA LINHA DO COMENTÁRIO. ABAIXO DEIXAREI UMA CONFIGURAÇÃO DE EXEMPLO PARA QUE SOMENTE ADMINISTRADORES
+     CRIEM NOVOS USUÁRIOS ADMINISTRADORES:
+     TODO
+        @PreAuthorize("#request.role() != T(sistema.reservas_restaurante_api.model.Role).ADMINISTRADOR or
+            isFullyAuthenticated() and hasRole('ADMINISTRADOR')")
+     */
+    /* O @PreAuthorize VERIFICARÁ SE O USUÁRIO ESTÁ TENTANDO CRIAR UM USUÁRIO DIFERENTE DE ADMINISTRADOR, OU SEJA,
+       CLIENTE. SE SIM, ESTÁ AUTORIZADO A CRIAR O USUÁRIO. SE NÃO, VERIFICA SE O USUÁRIO ESTÁ AUTENTICADO TOTALMENTE
+       E SE É ADMINISTRADOR.
+    */
     public ResponseEntity<UsuarioDTOResponseRegistro> registrar(@RequestBody @Valid UsuarioDTORequestRegistro request){
         return new ResponseEntity<>(service.save(request), HttpStatus.CREATED);
     }
