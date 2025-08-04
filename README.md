@@ -18,7 +18,7 @@ Este sistema resolve desafios comuns de gestão em restaurantes, como:
 ## 🚀 Funcionalidades
 
 - Cadastro e login de usuários com validações robustas
-- Geração de token JWT ao logar
+- Geração de accessToken JWT ao logar
 - Controle de acesso baseado em perfis (`CLIENTE`, `ADMINISTRADOR`)
 - Gerenciamento de mesas (criar, atualizar, remover — apenas ADMIN)
 - Criação, visualização e cancelamento de reservas com regras específicas
@@ -109,7 +109,7 @@ src/main/java/com/br/sistema_reserva_restaurante
 ## 🔐 Segurança e Regras de Negócio
 
 - Apenas usuários autenticados podem fazer reservas ou cancelamentos
-- O login gera um token JWT usado em requisições subsequentes
+- O login gera um accessToken JWT usado em requisições subsequentes
 - Regras de reserva:
   - Horário permitido: **18:00 às 23:00**
   - Não permite reservar datas passadas
@@ -139,7 +139,7 @@ Configure o `application.properties`:
 
 ```properties
 spring.datasource.url=jdbc:postgresql://<host>:<port>/<database>
-spring.datasource.username=seu_usuario
+spring.datasource.email=seu_usuario
 spring.datasource.password=sua_senha
 jwt.secret=CHAVE_SUPER_SECRETA
 jwt.expiration=3600000

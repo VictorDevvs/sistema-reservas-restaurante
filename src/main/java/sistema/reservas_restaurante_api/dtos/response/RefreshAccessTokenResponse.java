@@ -4,16 +4,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.UUID;
 
-@Schema(description = "Dados da resposta de login de usuário, incluindo o token JWT")
-public class UsuarioDTOResponseLogin {
-
-    @Schema(description = "Token JWT de autenticação para o usuário logado.",
-            example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
+@Schema(description = "Resposta para a requisição de atualização do token de acesso")
+public class RefreshAccessTokenResponse {
     private String accessToken;
-
-    @Schema(description = "Token de atualização (refresh token) para manter a sessão ativa.",
-            example = "123e4567-e89b-12d3-a456-426614174000")
     private UUID refreshToken;
+    private String message;
+
+    public RefreshAccessTokenResponse(String accessToken, UUID refreshToken, String message) {
+        this.accessToken = accessToken;
+        this.message = message;
+        this.refreshToken = refreshToken;
+    }
 
     public String getAccessToken() {
         return accessToken;
@@ -21,6 +22,14 @@ public class UsuarioDTOResponseLogin {
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public UUID getRefreshToken() {

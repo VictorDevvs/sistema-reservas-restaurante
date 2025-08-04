@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sistema.reservas_restaurante_api.dtos.request.LogoutRequest;
+import sistema.reservas_restaurante_api.dtos.request.RefreshTokenRequest;
 import sistema.reservas_restaurante_api.dtos.request.UsuarioDTORequestLogin;
 import sistema.reservas_restaurante_api.dtos.request.UsuarioDTORequestRegistro;
+import sistema.reservas_restaurante_api.dtos.response.RefreshAccessTokenResponse;
 import sistema.reservas_restaurante_api.dtos.response.UsuarioDTOResponseLogin;
 import sistema.reservas_restaurante_api.dtos.response.UsuarioDTOResponseRegistro;
 import sistema.reservas_restaurante_api.services.UsuarioService;
@@ -72,6 +75,34 @@ public class UsuarioController {
     @PostMapping("/login")
     public ResponseEntity<UsuarioDTOResponseLogin> login(@RequestBody @Valid UsuarioDTORequestLogin request){
         return ResponseEntity.ok(service.login(request));
+    }
+
+    @Operation(summary = "Atualiza o token de acesso usando um token de atualização")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Token de acesso atualizado com sucesso",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RefreshAccessTokenResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Token de atualização inválido ou expirado",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(example = "{\"title\": \"Token inválido\", \"message\": \"O token de atualização é inválido ou expirou.\", \"timestamp\": \"2025-06-20T10:00:00\"}")))
+    })
+    @PostMapping("/refresh")
+    public ResponseEntity<RefreshAccessTokenResponse> refreshToken(@RequestBody RefreshTokenRequest request){
+        RefreshAccessTokenResponse response = service.refreshToken(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Revoga o token de acesso do usuário")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Token de acesso revogado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Token de acesso inválido ou expirado",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(example = "{\"title\": \"Token inválido\", \"message\": \"O token de acesso é inválido ou expirou.\", \"timestamp\": \"2025-06-20T10:00:00\"}")))
+    })
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestBody LogoutRequest request){
+        service.revogarAccessToken(request.getAccessToken());
+        return ResponseEntity.ok().build();
     }
 }
 
