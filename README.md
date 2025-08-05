@@ -18,7 +18,7 @@ Este sistema resolve desafios comuns de gestão em restaurantes, como:
 ## 🚀 Funcionalidades
 
 - Cadastro e login de usuários com validações robustas
-- Geração de accessToken JWT ao logar
+- Geração de accessToken JWT e refreshToken opaco ao logar
 - Controle de acesso baseado em perfis (`CLIENTE`, `ADMINISTRADOR`)
 - Gerenciamento de mesas (criar, atualizar, remover — apenas ADMIN)
 - Criação, visualização e cancelamento de reservas com regras específicas
@@ -82,10 +82,14 @@ src/main/java/com/br/sistema_reserva_restaurante
 
 ### 👤 Usuário
 
-| Método | Endpoint             | Acesso       | Descrição                |
-|--------|----------------------|--------------|--------------------------|
-| POST   | `/usuarios/registrar` | Público      | Cadastro de usuário      |
-| POST   | `/usuarios/login`     | Público      | Login e obtenção de JWT  |
+| Método | Endpoint              | Acesso       | Descrição                   |
+|--------|-----------------------|--------------|-----------------------------|
+| POST   | `/usuarios/registrar` | Público      | Cadastro de usuário         |
+| POST   | `/usuarios/login`     | Público      | Login e obtenção de JWT     |
+| POST   | `/usuarios/refresh`   | Público      | Atualiza o token de acesso  |
+| POST   | `/usuarios/logout`    | Público      | Revoga o token de acesso    |
+
+
 
 ### 📅 Reserva
 
@@ -109,7 +113,7 @@ src/main/java/com/br/sistema_reserva_restaurante
 ## 🔐 Segurança e Regras de Negócio
 
 - Apenas usuários autenticados podem fazer reservas ou cancelamentos
-- O login gera um accessToken JWT usado em requisições subsequentes
+- O login gera um accessToken JWT com duração de 15 minutos usado em requisições subsequentes e um refreshToken opaco
 - Regras de reserva:
   - Horário permitido: **18:00 às 23:00**
   - Não permite reservar datas passadas
@@ -139,7 +143,7 @@ Configure o `application.properties`:
 
 ```properties
 spring.datasource.url=jdbc:postgresql://<host>:<port>/<database>
-spring.datasource.email=seu_usuario
+spring.datasource.username=seu_usuario
 spring.datasource.password=sua_senha
 jwt.secret=CHAVE_SUPER_SECRETA
 jwt.expiration=3600000
