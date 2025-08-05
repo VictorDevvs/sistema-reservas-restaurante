@@ -34,6 +34,9 @@ public class RefreshTokenService {
     @Value("${jwt.refreshTokenExpiration}")
     private long refreshTokenExpiration;
 
+    @Value("${jwt.maxActiveTokens}")
+    private long maxActiveTokens;
+
     public RefreshTokenService(RefreshTokenRepository repository, JwtTokenProvider provider, UsuarioRepository usuarioRepository,
                                AccessTokenRepository accessTokenRepository) {
         this.repository = repository;
@@ -51,7 +54,7 @@ public class RefreshTokenService {
 
         List<AccessToken> activeTokens = accessTokenRepository.findAtivosPorUsuario(usuario.getId(), agora);
 
-        if (activeTokens.size() >= 3){
+        if (activeTokens.size() >= maxActiveTokens){
             throw new LimiteTokensAtivosException("Número máximo de tokens ativos foi atingido. Somente é permitido 3 tokens ativos por usuário.");
         }
 
