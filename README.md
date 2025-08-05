@@ -139,7 +139,7 @@ Configure o `application.properties`:
 
 ```properties
 spring.datasource.url=jdbc:postgresql://<host>:<port>/<database>
-spring.datasource.email=seu_usuario
+spring.datasource.username=seu_usuario
 spring.datasource.password=sua_senha
 jwt.secret=CHAVE_SUPER_SECRETA
 jwt.expiration=3600000
