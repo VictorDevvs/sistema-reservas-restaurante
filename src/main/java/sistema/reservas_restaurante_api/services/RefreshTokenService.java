@@ -85,7 +85,7 @@ public class RefreshTokenService {
         return repository.save(newRefreshToken);
     }
 
-    public RefreshToken validate(UUID token){
+    public RefreshToken validateRefreshToken(UUID token){
         return repository.findByToken(token)
                 .filter(rt -> rt.getExpirationDate().isAfter(LocalDateTime.now()) && rt.getStatus() == StatusToken.ATIVO)
                 .orElseThrow(() -> new RefreshTokenInvalidoException("Token de refresh inválido ou expirado"));

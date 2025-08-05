@@ -84,7 +84,7 @@ public class ReservaService {
     }
 
     @Transactional
-    public void cancelar(Long id){
+    public void cancelarReserva(Long id){
         UsuarioModel usuarioAutenticado = validarAutenticacaoAutorizacaoUsuario.getUsuarioAutenticado();
 
         ReservaModel reserva = reservaRepository.findById(id).orElseThrow(() ->

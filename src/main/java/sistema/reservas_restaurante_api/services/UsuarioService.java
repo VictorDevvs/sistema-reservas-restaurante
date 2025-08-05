@@ -72,7 +72,7 @@ public class UsuarioService {
     }
 
     @Transactional
-    public UsuarioDTOResponseRegistro save(UsuarioDTORequestRegistro request){
+    public UsuarioDTOResponseRegistro saveUser(UsuarioDTORequestRegistro request){
         repository.findByEmail(request.email()).ifPresent(u -> {
             throw new EmailExistenteException("O email inserido já existe. Registre-se com outro email ou faça login caso tenha");
         });
@@ -86,7 +86,7 @@ public class UsuarioService {
     }
 
     @Transactional
-    public UsuarioDTOResponseLogin login(UsuarioDTORequestLogin request){
+    public UsuarioDTOResponseLogin loginUser(UsuarioDTORequestLogin request){
         UsuarioModel usuario = repository.findByEmail(request.email()).orElseThrow(
                 () -> new UsuarioNaoEncontradoException("Usuário não encontrado no banco de dados"));
 
@@ -112,8 +112,8 @@ public class UsuarioService {
     }
 
     @Transactional
-    public RefreshAccessTokenResponse refreshToken(RefreshTokenRequest request){
-        refreshTokenService.validate(request.getRefreshToken());
+    public RefreshAccessTokenResponse revogarRefreshToken(RefreshTokenRequest request){
+        refreshTokenService.validateRefreshToken(request.getRefreshToken());
         UUID oldToken = request.getRefreshToken();
 
         RefreshToken antigo = refreshTokenRepository.findByToken(oldToken).orElseThrow(() ->

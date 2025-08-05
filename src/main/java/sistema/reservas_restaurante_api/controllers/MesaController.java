@@ -39,8 +39,8 @@ public class MesaController {
     })
     @GetMapping
     @PreAuthorize("hasAnyRole('CLIENTE', 'ADMINISTRADOR')")
-    public ResponseEntity<Page<MesaDTOResponse>> findAll(Pageable pageable){
-        return new ResponseEntity<>(service.findAll(pageable), HttpStatus.OK);
+    public ResponseEntity<Page<MesaDTOResponse>> buscarMesas(Pageable pageable){
+        return new ResponseEntity<>(service.buscarMesas(pageable), HttpStatus.OK);
     }
 
     @Operation(summary = "Cadastra uma nova mesa no sistema (apenas para ADMINISTRADORES)")
@@ -57,8 +57,8 @@ public class MesaController {
     })
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    public ResponseEntity<MesaDTOResponse> save(@RequestBody @Valid MesaDTORequest request){
-        return new ResponseEntity<>(service.save(request), HttpStatus.CREATED);
+    public ResponseEntity<MesaDTOResponse> saveMesa(@RequestBody @Valid MesaDTORequest request){
+        return new ResponseEntity<>(service.saveMesa(request), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Atualiza os dados de uma mesa existente (apenas para ADMINISTRADORES)")
@@ -75,8 +75,8 @@ public class MesaController {
     })
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    public ResponseEntity<MesaDTOResponse> update(@RequestBody @Valid MesaDTORequest request, @PathVariable Long id){
-        return ResponseEntity.ok(service.update(request, id));
+    public ResponseEntity<MesaDTOResponse> updateMesa(@RequestBody @Valid MesaDTORequest request, @PathVariable Long id){
+        return ResponseEntity.ok(service.updateMesa(request, id));
     }
 
     @Operation(summary = "Exclui uma mesa pelo ID (apenas para ADMINISTRADORES)")
@@ -90,8 +90,8 @@ public class MesaController {
     })
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
-        service.delete(id);
+    public ResponseEntity<Void> deleteMesa(@PathVariable Long id){
+        service.deleteMesa(id);
         return ResponseEntity.noContent().build();
     }
 }

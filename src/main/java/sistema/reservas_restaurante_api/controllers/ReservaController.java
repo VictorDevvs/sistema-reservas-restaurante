@@ -41,7 +41,7 @@ public class ReservaController {
     })
     @GetMapping
     @PreAuthorize("hasAnyRole('CLIENTE', 'ADMINISTRADOR')")
-    public ResponseEntity<List<ReservaDTOResponse>> reservas(){
+    public ResponseEntity<List<ReservaDTOResponse>> buscarReservasDoUsuario(){
         return new ResponseEntity<>(service.findAllByUsuario(), HttpStatus.OK);
     }
     @PostMapping
@@ -88,8 +88,8 @@ public class ReservaController {
     })
     @PatchMapping("/{id}/cancelar")
     @PreAuthorize("hasAnyRole('CLIENTE', 'ADMINISTRADOR')")
-    public ResponseEntity<Void> cancelar(@PathVariable Long id){
-        service.cancelar(id);
+    public ResponseEntity<Void> cancelarReserva(@PathVariable Long id){
+        service.cancelarReserva(id);
         return ResponseEntity.noContent().build();
     }
 }

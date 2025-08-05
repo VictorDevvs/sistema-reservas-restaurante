@@ -56,8 +56,8 @@ public class UsuarioController {
        CLIENTE. SE SIM, ESTÁ AUTORIZADO A CRIAR O USUÁRIO. SE NÃO, VERIFICA SE O USUÁRIO ESTÁ AUTENTICADO TOTALMENTE
        E SE É ADMINISTRADOR.
     */
-    public ResponseEntity<UsuarioDTOResponseRegistro> registrar(@RequestBody @Valid UsuarioDTORequestRegistro request){
-        return new ResponseEntity<>(service.save(request), HttpStatus.CREATED);
+    public ResponseEntity<UsuarioDTOResponseRegistro> registrarUsuario(@RequestBody @Valid UsuarioDTORequestRegistro request){
+        return new ResponseEntity<>(service.saveUser(request), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Realiza o login de um usuário e retorna um token JWT")
@@ -73,8 +73,8 @@ public class UsuarioController {
                             schema = @Schema(example = "{\"title\": \"Usuário não encontrado\", \"message\": \"Usuário não encontrado no banco de dados.\", \"timestamp\": \"2025-06-20T10:00:00\"}")))
     })
     @PostMapping("/login")
-    public ResponseEntity<UsuarioDTOResponseLogin> login(@RequestBody @Valid UsuarioDTORequestLogin request){
-        return ResponseEntity.ok(service.login(request));
+    public ResponseEntity<UsuarioDTOResponseLogin> loginUsuario(@RequestBody @Valid UsuarioDTORequestLogin request){
+        return ResponseEntity.ok(service.loginUser(request));
     }
 
     @Operation(summary = "Atualiza o token de acesso usando um token de atualização")
@@ -87,8 +87,8 @@ public class UsuarioController {
                             schema = @Schema(example = "{\"title\": \"Token inválido\", \"message\": \"O token de atualização é inválido ou expirou.\", \"timestamp\": \"2025-06-20T10:00:00\"}")))
     })
     @PostMapping("/refresh")
-    public ResponseEntity<RefreshAccessTokenResponse> refreshToken(@RequestBody RefreshTokenRequest request){
-        RefreshAccessTokenResponse response = service.refreshToken(request);
+    public ResponseEntity<RefreshAccessTokenResponse> revogarRefreshToken(@RequestBody RefreshTokenRequest request){
+        RefreshAccessTokenResponse response = service.revogarRefreshToken(request);
         return ResponseEntity.ok(response);
     }
 
@@ -100,7 +100,7 @@ public class UsuarioController {
                             schema = @Schema(example = "{\"title\": \"Token inválido\", \"message\": \"O token de acesso é inválido ou expirou.\", \"timestamp\": \"2025-06-20T10:00:00\"}")))
     })
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@RequestBody LogoutRequest request){
+    public ResponseEntity<Void> revogarAccessToken(@RequestBody LogoutRequest request){
         service.revogarAccessToken(request.getAccessToken());
         return ResponseEntity.ok().build();
     }

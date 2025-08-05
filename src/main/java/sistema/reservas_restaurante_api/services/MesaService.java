@@ -33,14 +33,14 @@ public class MesaService {
         this.validarMesa = validarMesa;
     }
 
-    public Page<MesaDTOResponse> findAll(Pageable pageable){
+    public Page<MesaDTOResponse> buscarMesas(Pageable pageable){
         validarAutenticacaoUsuario.getUsuarioAutenticado();
         return repository.findAll(pageable)
                 .map(mapper::toDto);
     }
 
     @Transactional
-    public MesaDTOResponse save(MesaDTORequest request){
+    public MesaDTOResponse saveMesa(MesaDTORequest request){
         validarAutenticacaoUsuario.isAdministrador();
         validarMesa.mesaExistente(request.numero());
 
@@ -49,7 +49,7 @@ public class MesaService {
     }
 
     @Transactional
-    public MesaDTOResponse update(MesaDTORequest request, Long id){
+    public MesaDTOResponse updateMesa(MesaDTORequest request, Long id){
         validarAutenticacaoUsuario.isAdministrador();
 
         MesaModel model = repository.findById(id).orElseThrow(() -> new MesaNaoEncontradaException("Mesa não encontrada"));
@@ -71,7 +71,7 @@ public class MesaService {
     }
 
     @Transactional
-    public void delete(Long id){
+    public void deleteMesa(Long id){
         validarAutenticacaoUsuario.isAdministrador();
 
         MesaModel model = repository.findById(id).orElseThrow(() -> new MesaNaoEncontradaException("Mesa não encontrada"));
