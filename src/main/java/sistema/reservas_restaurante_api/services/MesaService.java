@@ -5,10 +5,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import sistema.reservas_restaurante_api.dtos.request.AtualizarMesaDTORequest;
 import sistema.reservas_restaurante_api.dtos.request.MesaDTORequest;
 import sistema.reservas_restaurante_api.dtos.response.MesaDTOResponse;
-import sistema.reservas_restaurante_api.exceptions.mesaexceptions.MesaExistenteException;
 import sistema.reservas_restaurante_api.exceptions.mesaexceptions.MesaNaoEncontradaException;
 import sistema.reservas_restaurante_api.mapper.MesaMapper;
 import sistema.reservas_restaurante_api.model.MesaModel;
@@ -16,8 +14,6 @@ import sistema.reservas_restaurante_api.repositories.MesaRepository;
 import sistema.reservas_restaurante_api.repositories.UsuarioRepository;
 import sistema.reservas_restaurante_api.validation.ValidarAutenticacaoAutorizacaoUsuario;
 import sistema.reservas_restaurante_api.validation.ValidarMesa;
-
-import java.util.Optional;
 
 @Service
 public class MesaService {
@@ -53,7 +49,7 @@ public class MesaService {
     }
 
     @Transactional
-    public MesaDTOResponse update(AtualizarMesaDTORequest request, Long id){
+    public MesaDTOResponse update(MesaDTORequest request, Long id){
         validarAutenticacaoUsuario.isAdministrador();
 
         MesaModel model = repository.findById(id).orElseThrow(() -> new MesaNaoEncontradaException("Mesa não encontrada"));

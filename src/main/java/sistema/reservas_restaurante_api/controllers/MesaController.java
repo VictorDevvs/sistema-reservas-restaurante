@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import sistema.reservas_restaurante_api.dtos.request.AtualizarMesaDTORequest;
 import sistema.reservas_restaurante_api.dtos.request.MesaDTORequest;
 import sistema.reservas_restaurante_api.dtos.response.MesaDTOResponse;
 import sistema.reservas_restaurante_api.services.MesaService;
@@ -76,7 +75,7 @@ public class MesaController {
     })
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    public ResponseEntity<MesaDTOResponse> update(@RequestBody @Valid AtualizarMesaDTORequest request, @PathVariable Long id){
+    public ResponseEntity<MesaDTOResponse> update(@RequestBody @Valid MesaDTORequest request, @PathVariable Long id){
         return ResponseEntity.ok(service.update(request, id));
     }
 
