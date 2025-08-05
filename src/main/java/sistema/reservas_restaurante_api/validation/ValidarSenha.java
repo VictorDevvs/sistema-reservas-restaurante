@@ -15,15 +15,15 @@ public class ValidarSenha {
 
         Pattern specialCharPattern = Pattern.compile(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*");
         Matcher specialCharMatcher = specialCharPattern.matcher(password);
-        boolean hasSpecialChar = specialCharMatcher.matches();
+        boolean hasSpecialChar = specialCharMatcher.find();
 
         Pattern upperCasePattern = Pattern.compile(".*[A-Z].*");
         Matcher upperCaseMatcher = upperCasePattern.matcher(password);
-        boolean hasUpperCase = upperCaseMatcher.matches();
+        boolean hasUpperCase = upperCaseMatcher.find();
 
         Pattern lowerCasePattern = Pattern.compile(".*[a-z].*");
         Matcher lowerCaseMatcher = lowerCasePattern.matcher(password);
-        boolean hasLowerCase = lowerCaseMatcher.matches();
+        boolean hasLowerCase = lowerCaseMatcher.find();
 
         boolean hasMinimumLength = password.trim().length() >= 8;
 
