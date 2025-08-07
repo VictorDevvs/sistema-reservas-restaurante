@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import sistema.reservas_restaurante_api.model.MesaStatus;
 
 @Schema(description = "Dados para a requisição de criação ou atualização de uma mesa")
-public record MesaDTORequest(
+public record  MesaDTORequest(
         @Schema(description = "Número único da mesa. Deve ser um valor inteiro.", example = "5")
         @Column(nullable = false, unique = true)
         @NotNull
