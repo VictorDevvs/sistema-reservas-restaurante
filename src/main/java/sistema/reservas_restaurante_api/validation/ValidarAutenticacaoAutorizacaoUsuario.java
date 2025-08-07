@@ -4,6 +4,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import sistema.reservas_restaurante_api.exceptions.PermissaoNegadaException;
+import sistema.reservas_restaurante_api.exceptions.usuarioexceptions.UsuarioNaoAutenticadoException;
 import sistema.reservas_restaurante_api.exceptions.usuarioexceptions.UsuarioNaoEncontradoException;
 import sistema.reservas_restaurante_api.model.Role;
 import sistema.reservas_restaurante_api.model.UsuarioModel;
@@ -29,7 +31,7 @@ public class ValidarAutenticacaoAutorizacaoUsuario {
         } else if (principal instanceof String str) {
             email = str;
         } else {
-            throw new RuntimeException("Usuário não autenticado");
+            throw new UsuarioNaoAutenticadoException("Usuário não autenticado. Faça login para continuar.");
         }
 
         return repository.findByEmail(email)
@@ -39,7 +41,7 @@ public class ValidarAutenticacaoAutorizacaoUsuario {
     public void isAdministrador() {
         UsuarioModel usuario = getUsuarioAutenticado();
         if (usuario.getRole() != Role.ADMINISTRADOR) {
-            throw new RuntimeException("Usuário não possui status de administrador.");
+            throw new PermissaoNegadaException("Usuário não possui status de administrador.");
         }
     }
 

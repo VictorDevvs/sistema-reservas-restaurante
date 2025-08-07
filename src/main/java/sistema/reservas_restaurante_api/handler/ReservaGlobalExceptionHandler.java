@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import sistema.reservas_restaurante_api.exceptions.ApiDetails;
+import sistema.reservas_restaurante_api.exceptions.PermissaoNegadaException;
 import sistema.reservas_restaurante_api.exceptions.mesaexceptions.MesaNaoEncontradaException;
 import sistema.reservas_restaurante_api.exceptions.reservaexceptions.*;
 

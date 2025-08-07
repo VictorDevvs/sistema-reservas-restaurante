@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Component
-public class ValidarHorarioFuncionamento {
+public class ValidacoesHorario {
 
     public void validarHorarioFuncionamento(LocalDateTime dataHora) {
         LocalTime horaReserva = dataHora.toLocalTime();
@@ -23,6 +23,13 @@ public class ValidarHorarioFuncionamento {
         var ultimaReserva = RestauranteConstants.HORARIO_FECHAMENTO.minusHours(1);
         if (dataHoraReserva.toLocalTime().isAfter(ultimaReserva)){
             throw new DataHoraNaoPermitidaException("A última reserva deve ser feita até uma hora antes do fechamento do restaurante.");
+        }
+    }
+
+    public void validarHorarioReserva(LocalDateTime dataHoraReserva) {
+        LocalDateTime agora = LocalDateTime.now();
+        if (dataHoraReserva.isBefore(agora)) {
+            throw new DataHoraNaoPermitidaException("A data e hora da reserva não podem ser no passado.");
         }
     }
 }

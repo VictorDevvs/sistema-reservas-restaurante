@@ -5,10 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import sistema.reservas_restaurante_api.exceptions.ApiDetails;
-import sistema.reservas_restaurante_api.exceptions.usuarioexceptions.EmailExistenteException;
-import sistema.reservas_restaurante_api.exceptions.usuarioexceptions.SenhaFracaException;
-import sistema.reservas_restaurante_api.exceptions.usuarioexceptions.SenhaInvalidaException;
-import sistema.reservas_restaurante_api.exceptions.usuarioexceptions.UsuarioNaoEncontradoException;
+import sistema.reservas_restaurante_api.exceptions.usuarioexceptions.*;
 
 import java.time.LocalDateTime;
 
@@ -39,6 +36,13 @@ public class UsuarioGlobalExceptionHandler {
     @ExceptionHandler(UsuarioNaoEncontradoException.class)
     public ResponseEntity<ApiDetails> usuarioNaoEncontradoException(UsuarioNaoEncontradoException ex){
         ApiDetails details = new ApiDetails("Usuário não encontrado", ex.getMessage(), LocalDateTime.now());
+
+        return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UsuarioNaoAutenticadoException.class)
+    public ResponseEntity<ApiDetails> usuarioNaoAutenticadoException(UsuarioNaoAutenticadoException ex){
+        ApiDetails details = new ApiDetails("Erro de autenticação!", ex.getMessage(), LocalDateTime.now());
 
         return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
     }

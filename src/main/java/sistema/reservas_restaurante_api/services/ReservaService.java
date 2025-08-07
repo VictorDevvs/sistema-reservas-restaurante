@@ -4,15 +4,17 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import sistema.reservas_restaurante_api.dtos.request.ReservaDTORequest;
 import sistema.reservas_restaurante_api.dtos.response.ReservaDTOResponse;
+import sistema.reservas_restaurante_api.exceptions.PermissaoNegadaException;
 import sistema.reservas_restaurante_api.exceptions.reservaexceptions.*;
 import sistema.reservas_restaurante_api.mapper.ReservaMapper;
 import sistema.reservas_restaurante_api.model.*;
 import sistema.reservas_restaurante_api.repositories.MesaRepository;
 import sistema.reservas_restaurante_api.repositories.ReservaRepository;
 import sistema.reservas_restaurante_api.repositories.UsuarioRepository;
+import sistema.reservas_restaurante_api.validation.ValidacoesReserva;
 import sistema.reservas_restaurante_api.validation.ValidarAutenticacaoAutorizacaoUsuario;
-import sistema.reservas_restaurante_api.validation.ValidarHorarioFuncionamento;
-import sistema.reservas_restaurante_api.validation.ValidarMesaDisponivel;
+import sistema.reservas_restaurante_api.validation.ValidacoesHorario;
+import sistema.reservas_restaurante_api.validation.ValidacoesMesa;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,24 +26,27 @@ public class ReservaService {
     private final UsuarioRepository usuarioRepository;
     private final ReservaRepository reservaRepository;
     private final ReservaMapper mapper;
-    private final ValidarHorarioFuncionamento validarHorarioFuncionamento;
-    private final ValidarMesaDisponivel validarMesaDisponivel;
+    private final ValidacoesHorario validarHorario;
+    private final ValidacoesMesa validacoesMesa;
     private final ValidarAutenticacaoAutorizacaoUsuario validarAutenticacaoAutorizacaoUsuario;
+    private final ValidacoesReserva validacoesReserva;
 
     public ReservaService(MesaRepository mesaRepository,
                           UsuarioRepository usuarioRepository, ReservaRepository reservaRepository, ReservaMapper mapper,
-                          ValidarHorarioFuncionamento validarHorarioFuncionamento, ValidarMesaDisponivel validarMesaDisponivel,
-                          ValidarAutenticacaoAutorizacaoUsuario validarAutenticacaoAutorizacaoUsuario) {
+                          ValidacoesHorario validarHorario, ValidacoesMesa validacoesMesa,
+                          ValidarAutenticacaoAutorizacaoUsuario validarAutenticacaoAutorizacaoUsuario,
+                          ValidacoesReserva validacoesReserva) {
         this.mesaRepository = mesaRepository;
         this.usuarioRepository = usuarioRepository;
         this.reservaRepository = reservaRepository;
         this.mapper = mapper;
-        this.validarHorarioFuncionamento = validarHorarioFuncionamento;
-        this.validarMesaDisponivel = validarMesaDisponivel;
+        this.validarHorario = validarHorario;
+        this.validacoesMesa = validacoesMesa;
         this.validarAutenticacaoAutorizacaoUsuario = validarAutenticacaoAutorizacaoUsuario;
+        this.validacoesReserva = validacoesReserva;
     }
 
-    public List<ReservaDTOResponse> findAllByUsuario(){
+    public List<ReservaDTOResponse> buscarReservasPorUsuario(){
         UsuarioModel usuario = validarAutenticacaoAutorizacaoUsuario.getUsuarioAutenticado();
         List<ReservaModel> reservas = reservaRepository.findByUsuario(usuario);
         return reservas.stream().map(mapper::toDto).toList();
@@ -54,24 +59,12 @@ public class ReservaService {
         MesaModel mesaModel = mesaRepository.findById(request.mesa())
                 .orElseThrow(() -> new MesaNaoDisponivelException("Mesa não encontrada"));
 
-        if (request.dataHoraReserva().isBefore(LocalDateTime.now())) {
-            throw new DataHoraNaoPermitidaException("Erro: você não pode reservar para uma data e hora passada");
-        }
-
-        validarHorarioFuncionamento.validarHorarioFuncionamento(request.dataHoraReserva());
-        validarHorarioFuncionamento.ultimaReserva(request.dataHoraReserva());
-
-        if (!validarMesaDisponivel.isMesaDisponivel(mesaModel, request.dataHoraReserva())) {
-            throw new MesaNaoDisponivelException("Mesa não disponível para esta data e hora");
-        }
-
-        if (request.numeroPessoas() > mesaModel.getCapacidade()) {
-            throw new CapacidadeMesaException("Número de pessoas excede a capacidade suportada da mesa");
-        }
-
-        if (mesaModel.getStatus().equals(MesaStatus.RESERVADA) || mesaModel.getStatus().equals(MesaStatus.INATIVA)) {
-            throw new MesaNaoDisponivelException("Mesa de número " + mesaModel.getNumero() + " não disponível");
-        }
+        validarHorario.validarHorarioFuncionamento(request.dataHoraReserva());
+        validarHorario.ultimaReserva(request.dataHoraReserva());
+        validarHorario.validarHorarioReserva(request.dataHoraReserva());
+        validacoesMesa.mesaDisponivel(mesaModel, request.dataHoraReserva());
+        validacoesMesa.capacidadeExcedida(request.numeroPessoas(), mesaModel.getCapacidade());
+        validacoesMesa.statusMesa(mesaModel);
 
         ReservaModel reservaModel = mapper.toModel(request);
         reservaModel.setUsuario(usuarioModel);
@@ -89,16 +82,10 @@ public class ReservaService {
 
         ReservaModel reserva = reservaRepository.findById(id).orElseThrow(() ->
                 new ReservaNaoEncontradaException("Nenhuma reserva encontrada com o id = " + id));
-        if (reserva.getStatus().equals(ReservaStatus.CANCELADA) || reserva.getStatus().equals(ReservaStatus.CONCLUIDA)){
-            throw new ReservaNaoAtivaException("Reserva com o id " + id + " não está ativa");
-        }
+        validacoesReserva.verificarReservaExistente(reserva, id);
 
         boolean isAdmin = validarAutenticacaoAutorizacaoUsuario.isCurrentUserAdmin();
-        if (!isAdmin){
-            if (!reserva.getUsuario().getId().equals(usuarioAutenticado.getId())){
-                throw new PermissaoNegadaException("Você não tem permissão para cancelar essa reserva");
-            }
-        }
+        validacoesReserva.verificarPermissao(isAdmin, reserva, usuarioAutenticado);
 
         reserva.setStatus(ReservaStatus.CANCELADA);
         MesaModel model = reserva.getMesa();
@@ -109,20 +96,6 @@ public class ReservaService {
 
     @Transactional
     protected void verificarReservasExpiradas(){
-        LocalDateTime now = LocalDateTime.now();
-        List<ReservaModel> reservas = reservaRepository.findAll();
-
-        for (ReservaModel reserva : reservas) {
-            if (reserva.getStatus() == ReservaStatus.ATIVA) {
-                LocalDateTime fimReserva = reserva.getDataHoraReserva().plusHours(1);
-                if (now.isAfter(fimReserva)) {
-                    reserva.setStatus(ReservaStatus.CONCLUIDA);
-                    MesaModel mesa = reserva.getMesa();
-                    mesa.setStatus(MesaStatus.DISPONIVEL);
-                    mesaRepository.save(mesa);
-                    reservaRepository.save(reserva);
-                }
-            }
-        }
+        validacoesReserva.verificarReservas();
     }
 }

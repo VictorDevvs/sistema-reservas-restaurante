@@ -42,7 +42,7 @@ public class ReservaController {
     @GetMapping
     @PreAuthorize("hasAnyRole('CLIENTE', 'ADMINISTRADOR')")
     public ResponseEntity<List<ReservaDTOResponse>> buscarReservasDoUsuario(){
-        return new ResponseEntity<>(service.findAllByUsuario(), HttpStatus.OK);
+        return new ResponseEntity<>(service.buscarReservasPorUsuario(), HttpStatus.OK);
     }
     @PostMapping
     @PreAuthorize("hasAnyRole('CLIENTE', 'ADMINISTRADOR')")

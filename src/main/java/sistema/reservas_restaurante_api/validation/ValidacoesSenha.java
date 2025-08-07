@@ -9,11 +9,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Configuration
-public class ValidarSenha {
+public class ValidacoesSenha {
 
     private final PasswordEncoder encoder;
 
-    public ValidarSenha(PasswordEncoder encoder) {
+    public ValidacoesSenha(PasswordEncoder encoder) {
         this.encoder = encoder;
     }
 

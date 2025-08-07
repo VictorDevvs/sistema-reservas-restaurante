@@ -28,7 +28,7 @@ import sistema.reservas_restaurante_api.repositories.RefreshTokenRepository;
 import sistema.reservas_restaurante_api.repositories.UsuarioRepository;
 import sistema.reservas_restaurante_api.security.CustomUserDetailsService;
 import sistema.reservas_restaurante_api.security.JwtTokenProvider;
-import sistema.reservas_restaurante_api.validation.ValidarSenha;
+import sistema.reservas_restaurante_api.validation.ValidacoesSenha;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,7 +40,7 @@ public class UsuarioService {
     private final UsuarioRepository repository;
     private final PasswordEncoder encoder;
     private final JwtTokenProvider provider;
-    private final ValidarSenha validarSenha;
+    private final ValidacoesSenha validarSenha;
     private final UsuarioMapper mapper;
     private final CustomUserDetailsService detailsService;
     private final AuthenticationManager manager;
@@ -54,7 +54,7 @@ public class UsuarioService {
     @Value("${jwt.refreshTokenExpiration}")
     private long refreshTokenExpiration;
 
-    public UsuarioService(UsuarioRepository repository, PasswordEncoder encoder, JwtTokenProvider provider, ValidarSenha validarSenha,
+    public UsuarioService(UsuarioRepository repository, PasswordEncoder encoder, JwtTokenProvider provider, ValidacoesSenha validarSenha,
                           UsuarioMapper mapper, CustomUserDetailsService detailsService, AuthenticationManager manager,
                           RefreshTokenService service, AccessTokenRepository accessTokenRepository,
                           RefreshTokenRepository refreshTokenRepository) {
