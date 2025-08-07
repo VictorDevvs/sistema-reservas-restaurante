@@ -1,14 +1,23 @@
 package sistema.reservas_restaurante_api.validation;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import sistema.reservas_restaurante_api.exceptions.usuarioexceptions.SenhaFracaException;
+import sistema.reservas_restaurante_api.exceptions.usuarioexceptions.SenhaInvalidaException;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Configuration
 public class ValidarSenha {
 
-    public void validatePassword(String password) throws SenhaFracaException {
+    private final PasswordEncoder encoder;
+
+    public ValidarSenha(PasswordEncoder encoder) {
+        this.encoder = encoder;
+    }
+
+    public void validarSenhaForte(String password) throws SenhaFracaException {
         Pattern numberPattern = Pattern.compile("\\d");
         Matcher numberMatcher = numberPattern.matcher(password);
         boolean hasNumber = numberMatcher.find();
@@ -34,6 +43,13 @@ public class ValidarSenha {
                     um caractere especial e no mínimo 8 caracteres."""
             );
         }
+    }
+
+    public boolean validarSenhaCorretaUsuario(String senhaPassada, String senhaBanco) {
+        if (!encoder.matches(senhaPassada, senhaBanco)) {
+            throw new SenhaInvalidaException("Senha inválida. Por favor, verifique sua senha e tente novamente.");
+        }
+        return true;
     }
 }
 

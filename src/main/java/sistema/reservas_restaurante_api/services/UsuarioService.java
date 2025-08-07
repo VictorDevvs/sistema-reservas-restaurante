@@ -17,7 +17,6 @@ import sistema.reservas_restaurante_api.dtos.response.UsuarioDTOResponseRegistro
 import sistema.reservas_restaurante_api.exceptions.refreshtokensexception.RefreshTokenInvalidoException;
 import sistema.reservas_restaurante_api.exceptions.refreshtokensexception.TokenExpiradoException;
 import sistema.reservas_restaurante_api.exceptions.usuarioexceptions.EmailExistenteException;
-import sistema.reservas_restaurante_api.exceptions.usuarioexceptions.SenhaInvalidaException;
 import sistema.reservas_restaurante_api.exceptions.usuarioexceptions.UsuarioNaoEncontradoException;
 import sistema.reservas_restaurante_api.mapper.UsuarioMapper;
 import sistema.reservas_restaurante_api.model.AccessToken;
@@ -77,7 +76,7 @@ public class UsuarioService {
             throw new EmailExistenteException("O email inserido já existe. Registre-se com outro email ou faça login caso tenha");
         });
 
-        validarSenha.validatePassword(request.senha());
+        validarSenha.validarSenhaForte(request.senha());
 
         UsuarioModel usuario = mapper.toModel(request);
         usuario.setSenha(encoder.encode(usuario.getSenha()));
@@ -90,9 +89,7 @@ public class UsuarioService {
         UsuarioModel usuario = repository.findByEmail(request.email()).orElseThrow(
                 () -> new UsuarioNaoEncontradoException("Usuário não encontrado no banco de dados"));
 
-        if(!encoder.matches(request.senha(), usuario.getSenha())){
-            throw new SenhaInvalidaException("Senha incorreta. Verifique e tente fazer login novamente");
-        }
+        validarSenha.validarSenhaCorretaUsuario(request.senha(), usuario.getSenha());
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(request.email(), request.senha());
