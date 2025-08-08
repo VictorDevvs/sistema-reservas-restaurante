@@ -4,26 +4,23 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import sistema.reservas_restaurante_api.dtos.request.ReservaDTORequest;
 import sistema.reservas_restaurante_api.dtos.response.ReservaDTOResponse;
-import sistema.reservas_restaurante_api.exceptions.PermissaoNegadaException;
-import sistema.reservas_restaurante_api.exceptions.reservaexceptions.*;
+import sistema.reservas_restaurante_api.exceptions.reservaexceptions.MesaNaoDisponivelException;
+import sistema.reservas_restaurante_api.exceptions.reservaexceptions.ReservaNaoEncontradaException;
 import sistema.reservas_restaurante_api.mapper.ReservaMapper;
 import sistema.reservas_restaurante_api.model.*;
 import sistema.reservas_restaurante_api.repositories.MesaRepository;
 import sistema.reservas_restaurante_api.repositories.ReservaRepository;
-import sistema.reservas_restaurante_api.repositories.UsuarioRepository;
-import sistema.reservas_restaurante_api.validation.ValidacoesReserva;
-import sistema.reservas_restaurante_api.validation.ValidarAutenticacaoAutorizacaoUsuario;
 import sistema.reservas_restaurante_api.validation.ValidacoesHorario;
 import sistema.reservas_restaurante_api.validation.ValidacoesMesa;
+import sistema.reservas_restaurante_api.validation.ValidacoesReserva;
+import sistema.reservas_restaurante_api.validation.ValidarAutenticacaoAutorizacaoUsuario;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class ReservaService {
 
     private final MesaRepository mesaRepository;
-    private final UsuarioRepository usuarioRepository;
     private final ReservaRepository reservaRepository;
     private final ReservaMapper mapper;
     private final ValidacoesHorario validarHorario;
@@ -32,12 +29,11 @@ public class ReservaService {
     private final ValidacoesReserva validacoesReserva;
 
     public ReservaService(MesaRepository mesaRepository,
-                          UsuarioRepository usuarioRepository, ReservaRepository reservaRepository, ReservaMapper mapper,
+                          ReservaRepository reservaRepository, ReservaMapper mapper,
                           ValidacoesHorario validarHorario, ValidacoesMesa validacoesMesa,
                           ValidarAutenticacaoAutorizacaoUsuario validarAutenticacaoAutorizacaoUsuario,
                           ValidacoesReserva validacoesReserva) {
         this.mesaRepository = mesaRepository;
-        this.usuarioRepository = usuarioRepository;
         this.reservaRepository = reservaRepository;
         this.mapper = mapper;
         this.validarHorario = validarHorario;
@@ -96,6 +92,6 @@ public class ReservaService {
 
     @Transactional
     protected void verificarReservasExpiradas(){
-        validacoesReserva.verificarReservas();
+        validacoesReserva.concluirReservasExpiradas();
     }
 }

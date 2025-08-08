@@ -1,14 +1,14 @@
 package sistema.reservas_restaurante_api.validation;
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import sistema.reservas_restaurante_api.exceptions.usuarioexceptions.SenhaFracaException;
 import sistema.reservas_restaurante_api.exceptions.usuarioexceptions.SenhaInvalidaException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Configuration
+@Component
 public class ValidacoesSenha {
 
     private final PasswordEncoder encoder;

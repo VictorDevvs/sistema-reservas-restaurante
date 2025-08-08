@@ -34,7 +34,7 @@ public class ValidacoesReserva {
         }
     }
 
-    public void verificarReservas(){
+    public void concluirReservasExpiradas(){
         List<ReservaModel> reservas = reservaRepository.findAll();
         LocalDateTime now = LocalDateTime.now();
         for (ReservaModel reserva : reservas) {
