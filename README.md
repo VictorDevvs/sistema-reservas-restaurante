@@ -159,7 +159,3 @@ Acesse o Swagger:
 ```
 http://localhost:8080/swagger-ui/index.html
 ```
-Para acessar a API em tempo real:
-```
-https://sistema-reservas-restaurante-api.onrender.com/swagger-ui/index.html
-```
